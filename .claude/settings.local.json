@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(pip --version)",
+      "Bash(python -c \"import sys; print\\(sys.executable\\); print\\(sys.version\\)\")",
+      "Bash(D:/study_home/distributed-system/venv/Scripts/python.exe *)",
+      "Bash(docker-compose up *)",
+      "Bash(docker compose *)",
+      "Bash(where docker *)",
+      "Bash(\"D:/study_home/distributed-system/venv/Scripts/python.exe\" -c \"import nacos; print\\(dir\\(nacos\\)\\)\")",
+      "Bash(\"D:/study_home/distributed-system/venv/Scripts/python.exe\" -c \"from nacos_sdk_python import NacosClient; print\\('ok'\\)\")",
+      "Bash(venv/Scripts/python *)",
+      "Bash(/d/study_home/distributed-system/venv/Scripts/python main.py)",
+      "Bash(/d/study_home/distributed-system/venv/Scripts/python mq_consumer.py)",
+      "Bash(mysql *)"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+sqlalchemy[asyncio]>=2.0.23
+aiomysql>=0.2.0
+aioredis>=2.0.1
+aio-pika>=9.2.1
+nacos-sdk-python>=0.1.15
+pydantic>=2.4.2

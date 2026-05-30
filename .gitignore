@@ -1,0 +1,89 @@
+# ==================== Python 编译/缓存文件 ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ==================== 虚拟环境 (venv / conda / virtualenv) ====================
+venv/
+env/
+ENV/
+.venv/
+.env/
+.conda/
+envs/
+conda-env/
+site-packages/
+
+# ==================== PyCharm / IDE 配置 ====================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ==================== VS Code ====================
+.vscode/
+*.code-workspace
+.history/
+
+# ==================== 日志、临时文件、数据库 ====================
+*.log
+logs/
+tmp/
+temp/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 本地数据库、sqlite
+*.db
+*.sqlite
+*.sqlite3
+
+# ==================== 打包、测试、覆盖率 ====================
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+pytest.xml
+*.xml
+
+# ==================== Jupyter Notebook ====================
+.ipynb_checkpoints/
+*.ipynb
+
+# ==================== 环境变量、密钥文件 ====================
+.env
+.env.local
+.env.development
+.env.production
+*.pem
+*.key
+
+# ==================== Docker 相关(可选) ====================
+# 如需忽略容器/镜像临时文件可开启
+# .dockerignore
+# docker-compose.override.yml
+/micro-service-env/mysql-data/
