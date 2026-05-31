@@ -224,9 +224,9 @@ WORKDIR /app
 # 国内源 + vim 调试工具
 RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources
 RUN apt-get update && apt-get install -y --no-install-recommends vim
-COPY requirements.txt .
+COPY python-micro-service/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
-COPY . .
+COPY python-micro-service .
 EXPOSE 8000
 # 由 docker-compose command 覆盖启动命令
 CMD ["tail", "-f", "/dev/null"]
