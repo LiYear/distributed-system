@@ -1,7 +1,14 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import get_db_url, DB_NAME_ORDER, validate_config
+validate_config("Order-Service", ["DB_PASSWORD"])
+
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "mysql+aiomysql://root:123456@localhost:3306/db_order"
+DATABASE_URL = get_db_url(DB_NAME_ORDER)
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)

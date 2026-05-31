@@ -1,0 +1,126 @@
+# ============================================
+# Python 微服务应用编排 — 一键启动全部 4 个微服务
+#
+# 使用方式：
+#   ① 先启动基础设施：cd ../micro-service-env && docker-compose up -d
+#   ② 再启动微服务：   docker-compose up -d
+#   ③ 验证：           http://localhost:8080/docs
+# ============================================
+
+services:
+  # ---- API 网关 ----
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ms-gateway
+    command: sh -c "cd gateway && uvicorn main:app --host 0.0.0.0 --port 8080 --reload"
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SERVICE_IP=gateway
+    volumes:
+      - ./gateway:/app/gateway:ro
+    depends_on:
+      user-service:
+        condition: service_started
+      goods-service:
+        condition: service_started
+      order-service:
+        condition: service_started
+    networks:
+      - ms-network
+    restart: unless-stopped
+
+  # ---- 用户服务 ----
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ms-user-service
+    command: sh -c "cd user-service && uvicorn main:app --host 0.0.0.0 --port 8001 --reload"
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    environment:
+      - SERVICE_IP=user-service
+    volumes:
+      - ./user-service:/app/user-service:ro
+      - ./config.py:/app/config.py:ro
+    networks:
+      - ms-network
+    restart: unless-stopped
+
+  # ---- 商品服务 ----
+  goods-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ms-goods-service
+    command: sh -c "cd goods-service && uvicorn main:app --host 0.0.0.0 --port 8002 --reload"
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+    environment:
+      - SERVICE_IP=goods-service
+    volumes:
+      - ./goods-service:/app/goods-service:ro
+      - ./config.py:/app/config.py:ro
+    networks:
+      - ms-network
+    restart: unless-stopped
+
+  # ---- 订单服务 ----
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ms-order-service
+    command: sh -c "cd order-service && uvicorn main:app --host 0.0.0.0 --port 8003 --reload"
+    ports:
+      - "8003:8003"
+    env_file:
+      - .env
+    environment:
+      - SERVICE_IP=order-service
+    volumes:
+      - ./order-service:/app/order-service:ro
+      - ./config.py:/app/config.py:ro
+    networks:
+      - ms-network
+    restart: unless-stopped
+    # MQ 消费者需要 RabbitMQ 就绪后才正常工作
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---- MQ 消费者 ----
+  mq-consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ms-mq-consumer
+    command: python -u order-service/mq_consumer.py
+    env_file:
+      - .env
+    networks:
+      - ms-network
+    restart: unless-stopped
+    # 依赖 RabbitMQ 就绪（基础设施已由 micro-service-env 启动）
+    depends_on:
+      order-service:
+        condition: service_started
+
+networks:
+  # 引用 micro-service-env/docker-compose.yml 创建的外部网络
+  # 确保容器间可通过容器名互相访问（mysql/redis/rabbitmq/nacos）
+  ms-network:
+    external: true
+    name: ms-network
